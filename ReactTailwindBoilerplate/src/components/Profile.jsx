@@ -3,6 +3,7 @@ import p1 from "../image/p1.jpg";
 import p2 from "../image/p2.jpg";
 import p3 from "../image/p3.jpg";
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const UserProfile = () => {
   const [profilePicUrl, setProfilePicUrl] = useState(null);
@@ -17,18 +18,18 @@ const UserProfile = () => {
     formData.append('upload_preset', 'ir1ock8m');
 
     try {
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinary_name}/image/upload`, {
-        method: 'POST',
-        body: formData,
-        mode: 'cors',
+      const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudinary_name}/image/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
-      const data = await response.json();
-      if (response.ok) {
+      if (response.status === 200) {
+        const data = response.data;
         setProfilePicUrl(data.secure_url);
-        localStorage.setItem("profilePicUrl", data.secure_url); 
+        localStorage.setItem("profilePicUrl", data.secure_url);
       } else {
-        console.error('Error uploading image:', data.error);
+        console.error('Error uploading image:', response.data.error);
       }
     } catch (error) {
       console.error('Error uploading image:', error);

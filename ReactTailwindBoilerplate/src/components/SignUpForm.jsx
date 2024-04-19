@@ -15,16 +15,22 @@ const SignUpForm = () => {
   const handler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/signup", {
+      const res = await axios.post("https://dribbble-api.vercel.app/api/signup", {
         name,
         username,
         email,
         password,
-      });
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
       if (res.data.message === "exist") {
         alert("User already exists");
       } else if (res.data.message === "success") {
-        // Store email and name in local storage
         localStorage.setItem("email", email);
         localStorage.setItem("name", name);
         navigate("/profile");
@@ -37,13 +43,11 @@ const SignUpForm = () => {
 
   return (
     <div className="flex gap-4 items-center justify-center min-h-screen bg-yellow-100 ">
-      {/* Left side with image */}
       <div className="hidden sm:block w-2/3">
         <img src={i1} alt="img-1" className="object-cover h-screen inset-0" />
-        {/* <p className="mt-4 mx-4">Art by Peter Tarka</p> */}
+      
       </div>
 
-      {/* Right side with registration form */}
       <div className="flex-cols  p-8">
         <h1 className="text-3xl font-bold mb-4">
           Discover the world's top Designers & Creatives.

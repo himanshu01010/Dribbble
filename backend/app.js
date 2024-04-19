@@ -11,11 +11,11 @@ const jwt = require('jsonwebtoken');
 const resend = new Resend(process.env.RESEND_KEY)
 
 const app = express();
-// app.use(cors({
-//   origin:["https://dribbble-front.vercel.app"],
-//   methods:["POST"],
-//   credentials:true,
-// }));
+app.use(cors({
+  origin:["https://dribbble-front.vercel.app"],
+  methods:["POST"],
+  credentials:true,
+}));
 
 
 app.use(express.json());
@@ -39,7 +39,7 @@ pool.query("SELECT NOW()", (err, res) => {
 });
 
 
-app.post("https://dribbble-front.vercel.app/api/signup", async (req, res) => {
+app.post("/api/signup", async (req, res) => {
   const { name, username, email, password } = req.body;
   try {
     const client = await pool.connect();
@@ -70,7 +70,7 @@ app.post("https://dribbble-front.vercel.app/api/signup", async (req, res) => {
 });
 
 
-app.post("https://dribbble-front.vercel.app/api/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const client = await pool.connect();
@@ -109,7 +109,7 @@ app.post("https://dribbble-front.vercel.app/api/login", async (req, res) => {
   }
 });
 
-app.post("https://dribbble-front.vercel.app/api/profiles", async (req, res) => {
+app.post("/api/profiles", async (req, res) => {
   try {
     const { profilePic, location, email,role,isVerified } = req.body;
     console.log("request body:",req.body);
@@ -147,7 +147,7 @@ app.post("https://dribbble-front.vercel.app/api/profiles", async (req, res) => {
   }
 });
 
-app.post("https://dribbble-front.vercel.app/api/verify-email", async (req, res) => {
+app.post("/api/verify-email", async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -178,7 +178,7 @@ app.post("https://dribbble-front.vercel.app/api/verify-email", async (req, res) 
 
 
 
-app.post('https://dribbble-front.vercel.app/api/verify-token', async (req, res) => {
+app.post('/api/verify-token', async (req, res) => {
   const { token } = req.body;
 
   try {

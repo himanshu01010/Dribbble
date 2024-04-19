@@ -18,7 +18,13 @@ const Verification = () => {
 
   const verifyEmail = async () => {
     try {
-      const response = await axios.post("/api/verify-email", { email });
+      const response = await axios.post("https://dribbble-api.vercel.app/api/verify-email", { email },{
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
       if (response.status === 200) {
         await submitProfile();
         console.log("Email verification successful");
@@ -32,24 +38,28 @@ const Verification = () => {
 
   const submitProfile = async () => {
     try {
-      const response = await fetch("/api/profiles", {
-        method: "POST",
+      const response = await axios.post('https://dribbble-api.vercel.app/api/profiles', {
+        email,
+        profilePic,
+        location,
+        role,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          profilePic,
-          location,
-          role,
-        }),
+        withCredentials: true,
       });
-
-      if (!response.ok) {
-        console.error("Failed to submit profile");
+  
+      if (response.status === 200 || response.status === 201) {
+        // Profile submitted successfully
+        console.log('Profile submitted successfully');
+      } else {
+        // Error submitting profile
+        console.error('Failed to submit profile');
       }
     } catch (error) {
-      console.error("Error submitting profile:", error);
+      console.error('Error submitting profile:', error);
     }
   };
 

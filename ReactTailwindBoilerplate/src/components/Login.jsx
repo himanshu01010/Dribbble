@@ -13,7 +13,14 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/login", { email, password });
+      const res = await axios.post("https://dribbble-api.vercel.app/api/login", { email, password },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
       if (res.data.success) {
         const { name, email_validated, profilePic, userLocation, selectedRoles } = res.data;
         localStorage.setItem("name", name);

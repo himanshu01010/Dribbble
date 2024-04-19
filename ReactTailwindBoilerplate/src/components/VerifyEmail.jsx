@@ -11,7 +11,13 @@ const VerifyEmail = () => {
     const verifyEmail = async () => {
       try {
         const token = new URLSearchParams(location.search).get('token');
-        const response = await axios.post('/api/verify-token', { token });
+        const response = await axios.post('https://dribbble-api.vercel.app/api/verify-token', { token },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
 
         if (response.status === 200) {
           setIsVerified(true);
