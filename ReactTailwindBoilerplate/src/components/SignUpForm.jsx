@@ -76,7 +76,7 @@ const SignUpForm = () => {
 
       <div className="flex-cols p-8">
         <h1 className="text-3xl font-bold mb-4">Sign up to Dribbble</h1>
-        {usernameError && <p className="text-red-500 mb-4">{usernameError}</p>}
+        {emailError && <p className="text-red-500 mb-4">{emailError}</p>}
         <div className="bg-white p-8 rounded-lg shadow-md">
           <div className="mb-4">
             <label htmlFor="name" className="block font-bold mb-2">
