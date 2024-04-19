@@ -10,51 +10,76 @@ const SignUpForm = () => {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
   const handler = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post("https://dribbble-api.vercel.app/api/signup", {
-        name,
-        username,
-        email,
-        password,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+    setUsernameError("");
+    setNameError("");
+    setEmailError("");
+    setPasswordError("");
+
+    if (!name.trim()) {
+      setNameError("Name is required");
+    }
+
+    if (!username.trim()) {
+      setUsernameError("Username is required");
+    }
+
+    if (!email.trim()) {
+      setEmailError("Email is required");
+    }
+
+    if (!password.trim()) {
+      setPasswordError("Password is required");
+    }
+
+    if (name.trim() && username.trim() && email.trim() && password.trim()) {
+      try {
+        const res = await axios.post("https://dribbble-api.vercel.app/api/signup", {
+          name,
+          username,
+          email,
+          password,
         },
-        withCredentials: true,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+        if (res.data.message === "exist") {
+          setUsernameError("Username has already been taken");
+        } else if (res.data.message === "success") {
+          localStorage.setItem("email", email);
+          localStorage.setItem("name", name);
+          navigate("/profile");
+        }
+      } catch (error) {
+        console.error("Error during signup:", error);
+        alert("Wrong details or server error");
       }
-    );
-      if (res.data.message === "exist") {
-        alert("User already exists");
-      } else if (res.data.message === "success") {
-        localStorage.setItem("email", email);
-        localStorage.setItem("name", name);
-        navigate("/profile");
-      }
-    } catch (error) {
-      console.error("Error during signup:", error);
-      alert("Wrong details or server error");
     }
   };
 
   return (
-    <div className="flex gap-4 items-center justify-center min-h-screen bg-yellow-100 ">
+    <div className="flex gap-4 items-center justify-center min-h-screen bg-yellow-100">
       <div className="hidden sm:block w-2/3">
         <img src={i1} alt="img-1" className="object-cover h-screen inset-0" />
-      
       </div>
 
-      <div className="flex-cols  p-8">
-        <h1 className="text-3xl font-bold mb-4">
-          Discover the world's top Designers & Creatives.
-        </h1>
+      <div className="flex-cols p-8">
+        <h1 className="text-3xl font-bold mb-4">Sign up to Dribbble</h1>
+        {usernameError && <p className="text-red-500 mb-4">{usernameError}</p>}
         <div className="bg-white p-8 rounded-lg shadow-md">
           <div className="mb-4">
-            <label htmlFor="name" className="block font-bold mb-2 ">
+            <label htmlFor="name" className="block font-bold mb-2">
               Name
             </label>
             <input
@@ -66,6 +91,7 @@ const SignUpForm = () => {
               onChange={(e) => setName(e.target.value)}
               required
             />
+            {nameError && <p className="text-red-500 mt-2">{nameError}</p>}
           </div>
           <div className="mb-4">
             <label htmlFor="username" className="block font-bold mb-2">
@@ -79,6 +105,7 @@ const SignUpForm = () => {
               value={username}
               onChange={(e) => setUserName(e.target.value)}
             />
+            {usernameError && <p className="text-red-500 mt-2">{usernameError}</p>}
           </div>
           <div className="mb-4">
             <label htmlFor="email" className="block font-bold mb-2">
@@ -92,6 +119,7 @@ const SignUpForm = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {emailError && <p className="text-red-500 mt-2">{emailError}</p>}
           </div>
           <div className="mb-6">
             <label htmlFor="password" className="block font-bold mb-2">
@@ -105,6 +133,7 @@ const SignUpForm = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {passwordError && <p className="text-red-500 mt-2">{passwordError}</p>}
           </div>
           <div className="mb-6">
             <label className="flex items-center">
