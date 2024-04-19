@@ -4,6 +4,7 @@ import axios from "axios";
 const Verification = () => {
   const [isVerified, setIsVerified] = useState(false);
   const name = localStorage.getItem("name");
+  const [isEmailSent, setIsEmailSent] = useState(false);
   const isVerifiedFromStorage = localStorage.getItem("isVerified") === "true";
 
   useEffect(() => {
@@ -18,13 +19,16 @@ const Verification = () => {
 
   const verifyEmail = async () => {
     try {
-      const response = await axios.post("https://dribbble-api.vercel.app/api/verify-email", { email },{
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
+      const response = await axios.post(
+        "https://dribbble-api.vercel.app/api/verify-email",
+        { email },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
       if (response.status === 200) {
         await submitProfile();
         console.log("Email verification successful");
@@ -38,33 +42,39 @@ const Verification = () => {
 
   const submitProfile = async () => {
     try {
-      const response = await axios.post('https://dribbble-api.vercel.app/api/profiles', {
-        email,
-        profilePic,
-        location,
-        role,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        "https://dribbble-api.vercel.app/api/profiles",
+        {
+          email,
+          profilePic,
+          location,
+          role,
         },
-        withCredentials: true,
-      });
-  
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
       if (response.status === 200 || response.status === 201) {
-        // Profile submitted successfully
-        console.log('Profile submitted successfully');
+        console.log("Profile submitted successfully");
       } else {
-        // Error submitting profile
-        console.error('Failed to submit profile');
+        console.error("Failed to submit profile");
       }
     } catch (error) {
-      console.error('Error submitting profile:', error);
+      console.error("Error submitting profile:", error);
     }
   };
 
   const handleVerify = async () => {
-    await verifyEmail();
+    try {
+      await verifyEmail();
+      setIsEmailSent(true);
+    } catch (error) {
+      console.error("Error verifying email:", error);
+    }
   };
 
   return (
@@ -120,6 +130,13 @@ const Verification = () => {
               Welcome to Dribbble!
               <h1>{name} 👋</h1>
             </h1>
+          </div>
+        ) : isEmailSent ? (
+          <div className="max-w-md mx-auto text-center">
+            <p className="text-gray-600 mb-4">
+              A verification email has been sent to your inbox. Please check
+              your email and follow the instructions to verify your account.
+            </p>
           </div>
         ) : (
           <div className="max-w-md mx-auto text-center">
