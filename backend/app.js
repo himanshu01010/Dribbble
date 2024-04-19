@@ -159,7 +159,7 @@ app.post("/api/verify-email", async (req, res) => {
       subject: 'Email Verification',
       html: `
         <p>Please click the following link to verify your email address:</p>
-        <a href="http://localhost:3000/verify-email?token=${token}">Verify Email</a>
+        <a href="https://dribbble-front.vercel.app/verify-email?token=${token}">Verify Email</a>
       `,
     });
 
